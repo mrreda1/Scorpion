@@ -4,7 +4,6 @@
 using std::string;
 using StmType = enum { A_compoundStm, A_assignStm, A_printStm };
 using ExpType = enum { A_idExp, A_numExp, A_opExp, A_eseqExp };
-using ExpListType = enum { A_pairExpList, A_lastExpList };
 using A_binop = enum { A_plus, A_minus, A_mul, A_div };
 
 class A_exp_ {
