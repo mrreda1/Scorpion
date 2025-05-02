@@ -2,34 +2,35 @@
 #include <vector>
 
 using std::string;
-using StmType = enum { A_compoundStm, A_assignStm, A_printStm };
-using ExpType = enum { A_idExp, A_numExp, A_opExp, A_eseqExp };
+using A_stm_type = enum { A_assign, A_print };
+using A_exp_type = enum { A_id, A_num, A_oper };
 using A_binop = enum { A_plus, A_minus, A_mul, A_div };
 
 class A_exp_ {
   protected:
-    ExpType type;
+    A_exp_type type;
 
   public:
-    ExpType getType() {
+    A_exp_type getType() {
         return type;
     }
 };
 
 using A_exp = A_exp_ *;
-using A_expList = std::vector<A_exp> *;
+using A_exp_list = std::vector<A_exp> *;
 
 class A_stm_ {
   protected:
-    StmType type;
+    A_stm_type type;
 
   public:
-    StmType getType() {
+    A_stm_type getType() {
         return type;
     }
 };
 
 using A_stm = A_stm_ *;
+using A_stm_list = std::vector<A_stm> *;
 
 class A_IdExp : A_exp_ {
   private:
@@ -37,7 +38,7 @@ class A_IdExp : A_exp_ {
 
   public:
     A_IdExp(string id) {
-        this->type = A_idExp;
+        this->type = A_id;
         this->id = id;
     }
     string getID() {
@@ -51,30 +52,11 @@ class A_NumExp : A_exp_ {
 
   public:
     A_NumExp(int num) {
-        this->type = A_numExp;
+        this->type = A_num;
         this->num = num;
     }
     int getNum() {
         return num;
-    }
-};
-
-class A_EseqExp : A_exp_ {
-  private:
-    A_stm stm;
-    A_exp exp;
-
-  public:
-    A_EseqExp(A_stm stm, A_exp exp) {
-        this->type = A_eseqExp;
-        this->stm = stm;
-        this->exp = exp;
-    }
-    A_stm getStm() {
-        return stm;
-    }
-    A_exp getExp() {
-        return exp;
     }
 };
 
@@ -85,7 +67,7 @@ class A_OpExp : A_exp_ {
 
   public:
     A_OpExp(A_exp left, A_exp right, A_binop oper) {
-        this->type = A_opExp;
+        this->type = A_oper;
         this->left = left;
         this->right = right;
         this->oper = oper;
@@ -101,24 +83,6 @@ class A_OpExp : A_exp_ {
     }
 };
 
-class A_CompoundStm : A_stm_ {
-  private:
-    A_stm left, right;
-
-  public:
-    A_CompoundStm(A_stm left, A_stm right) {
-        this->type = A_compoundStm;
-        this->left = left;
-        this->right = right;
-    }
-    A_stm getLeft() {
-        return left;
-    }
-    A_stm getRight() {
-        return right;
-    }
-};
-
 class A_AssignStm : A_stm_ {
   private:
     string id;
@@ -126,7 +90,7 @@ class A_AssignStm : A_stm_ {
 
   public:
     A_AssignStm(string id, A_exp exp) {
-        this->type = A_assignStm;
+        this->type = A_assign;
         this->id = id;
         this->exp = exp;
     }
@@ -140,14 +104,14 @@ class A_AssignStm : A_stm_ {
 
 class A_PrintStm : A_stm_ {
   private:
-    A_expList exps;
+    A_exp_list exps;
 
   public:
-    A_PrintStm(A_expList exps) {
-        this->type = A_printStm;
+    A_PrintStm(A_exp_list exps) {
+        this->type = A_print;
         this->exps = exps;
     }
-    A_expList getExpList() {
+    A_exp_list getExpList() {
         return exps;
     }
 };
