@@ -1,5 +1,6 @@
 cc = g++
 debugFlags = -Wall -g
 
-test : testing/*
+.PHONY : test
+test :
 	$(cc) testing/* $(debugFlags) -o test
