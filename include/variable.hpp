@@ -1,17 +1,25 @@
 #ifndef _VARIABLE
 #define _VARIABLE
+
 #include "token.hpp"
 
-class T_var_ : public Token_ {
+class T_var_ {
   private:
+    inline static std::vector<T_var_ *> symbolTable;
+    inline static std::unordered_map<string, size_t> nameToID;
     inline static size_t counter = 0;
+
+    string name;
     size_t id;
 
   protected:
     T_data_type data_type;
-    T_var_() {
+
+    T_var_(string name) {
+        symbolTable.push_back(this);
+        nameToID[name] = counter;
+        this->name = name;
         this->id = counter++;
-        this->token_type = Variable;
     }
 
   public:
@@ -21,8 +29,22 @@ class T_var_ : public Token_ {
     size_t getID() {
         return id;
     }
+    string getName() {
+        return name;
+    }
+    static size_t getID(string name) {
+        return nameToID[name];
+    }
+    static T_var_ *getVariable(string name) {
+        return getVariable(getID(name));
+    }
+    static T_var_ *getVariable(size_t id) {
+        return symbolTable[id];
+    }
+
     virtual ~T_var_() = default;
 };
+
 using T_var = T_var_ *;
 
 class T_Integer_ : public T_var_ {
@@ -30,49 +52,37 @@ class T_Integer_ : public T_var_ {
     int value;
 
   public:
-    T_Integer_(int value) : T_var_() {
-        this->data_type = Integer;
+    T_Integer_(string name, int value = 0) : T_var_(name) {
+        this->data_type = D_Integer;
         this->value = value;
     }
     int getValue() {
         return value;
     }
+    void setValue(int value) {
+        this->value = value;
+    }
 };
+
 using T_Integer = T_Integer_ *;
-
-class T_SInteger_ : public T_var_ {
-  private:
-    T_sign sign;
-    int value;
-
-  public:
-    T_SInteger_(int value, T_sign sign) : T_var_() {
-        this->data_type = SInteger;
-        this->value = value;
-        this->sign = sign;
-    }
-    int getValue() {
-        return value;
-    }
-    T_sign getSign() {
-        return sign;
-    }
-};
-using T_SInteger = T_SInteger_ *;
 
 class T_Character_ : public T_var_ {
   private:
     char value;
 
   public:
-    T_Character_(char value) : T_var_() {
-        this->data_type = Character;
+    T_Character_(string name, char value = 0) : T_var_(name) {
+        this->data_type = D_Character;
         this->value = value;
     }
     char getValue() {
         return value;
     }
+    void setValue(char value) {
+        this->value = value;
+    }
 };
+
 using T_Character = T_Character_ *;
 
 class T_String_ : public T_var_ {
@@ -80,14 +90,18 @@ class T_String_ : public T_var_ {
     string value;
 
   public:
-    T_String_(string value) : T_var_() {
-        this->data_type = String;
+    T_String_(string name, string value = "") : T_var_(name) {
+        this->data_type = D_String;
         this->value = value;
     }
     string getValue() {
         return value;
     }
+    void setValue(string value) {
+        this->value = value;
+    }
 };
+
 using T_String = T_String_ *;
 
 class T_Float_ : public T_var_ {
@@ -95,33 +109,18 @@ class T_Float_ : public T_var_ {
     float value;
 
   public:
-    T_Float_(float value) : T_var_() {
-        this->data_type = Float;
+    T_Float_(string name, float value = 0) : T_var_(name) {
+        this->data_type = D_Float;
         this->value = value;
     }
     float getValue() {
         return value;
     }
+    void setValue(float value) {
+        this->value = value;
+    }
 };
+
 using T_Float = T_Float_ *;
 
-class T_SFloat_ : public T_var_ {
-  private:
-    T_sign sign;
-    float value;
-
-  public:
-    T_SFloat_(float value, T_sign sign) : T_var_() {
-        this->data_type = SFloat;
-        this->value = value;
-        this->sign = sign;
-    }
-    float getValue() {
-        return value;
-    }
-    T_sign getSign() {
-        return sign;
-    }
-};
-using T_SFloat = T_SFloat_ *;
 #endif

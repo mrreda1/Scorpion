@@ -1,32 +1,62 @@
 #ifndef _UTILS
 #define _UTILS
+
 #include <iostream>
+#include <unordered_map>
+#include <vector>
+
 using std::string;
-using T_token_type = enum {
+
+enum T_token_type {
     Variable,
     Condition,
+    Integer,
+    Character,
+    String,
+    Float,
     Void,
     Loop,
     Return,
     Struct,
-    ArithmeticOper,
-    LogicalOper,
-    RelationalOper,
-    AssignmentOper,
-    AccessOper,
+    Operator,
     Braces,
     Constant,
-    QuotationMark,
+    QuotationSingle,
+    QuotationDouble,
     Inclusion,
     Comment
 };
-using T_data_type = enum {
-    Integer,
-    SInteger,
-    Character,
-    String,
-    Float,
-    SFloat
+
+enum T_operator_type {
+    Sum,
+    Sub,
+    Mul,
+    Div,
+    LAnd,
+    LOr,
+    Not,
+    IsEq,
+    Less,
+    Greater,
+    LE,
+    GE,
+    NotEq,
+    Equal,
+    Access
 };
-using T_sign = enum { positive, negative };
+
+enum T_operator_category {
+    ArithmeticOper,
+    LogicOper,
+    RelationalOper,
+    AssignmentOper,
+    AccessOper
+};
+
+enum T_data_type { D_Integer, D_Character, D_String, D_Float };
+enum T_condition_type { If_branch, Else_branch };
+enum T_braces_type { Parenthesis, CurlyBrackets, Brackets };
+enum T_comment_type { Multiple, OneLine };
+enum T_braces_dir { Open, Close };
+
 #endif
