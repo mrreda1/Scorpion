@@ -3,7 +3,7 @@
 
 #include "token.hpp"
 
-class T_var_ {
+class T_var_ : public Token_ {
   private:
     inline static std::vector<T_var_ *> symbolTable;
     inline static std::unordered_map<string, size_t> nameToID;
@@ -20,6 +20,7 @@ class T_var_ {
         nameToID[name] = counter;
         this->name = name;
         this->id = counter++;
+        this->token_type = Identifier;
     }
 
   public:
@@ -53,7 +54,7 @@ class T_Integer_ : public T_var_ {
 
   public:
     T_Integer_(string name, int value = 0) : T_var_(name) {
-        this->data_type = D_Integer;
+        this->data_type = Integer;
         this->value = value;
     }
     int getValue() {
@@ -72,7 +73,7 @@ class T_Character_ : public T_var_ {
 
   public:
     T_Character_(string name, char value = 0) : T_var_(name) {
-        this->data_type = D_Character;
+        this->data_type = Character;
         this->value = value;
     }
     char getValue() {
@@ -91,7 +92,7 @@ class T_String_ : public T_var_ {
 
   public:
     T_String_(string name, string value = "") : T_var_(name) {
-        this->data_type = D_String;
+        this->data_type = String;
         this->value = value;
     }
     string getValue() {
@@ -110,7 +111,7 @@ class T_Float_ : public T_var_ {
 
   public:
     T_Float_(string name, float value = 0) : T_var_(name) {
-        this->data_type = D_Float;
+        this->data_type = Float;
         this->value = value;
     }
     float getValue() {

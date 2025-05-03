@@ -3,4 +3,4 @@ debugFlags = -Wall -g
 
 .PHONY : test
 test :
-	$(cc) testing/* $(debugFlags) -o test
+	$(cc) testing/*.cpp $(debugFlags) -o test

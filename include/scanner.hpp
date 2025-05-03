@@ -10,5 +10,6 @@
 #include "token.hpp"
 #include "variable.hpp"
 #include "utils.hpp"
+#include "typespecifier.hpp"
 
 #endif
