@@ -5,18 +5,12 @@
 
 class T_operator_ : public Token_ {
   private:
-    T_operator_category operator_category;
     T_operator_type operator_type;
 
   public:
-    T_operator_(T_operator_category operator_category,
-                T_operator_type operator_type) {
-        this->token_type = Operator;
-        this->operator_category = operator_category;
+    T_operator_(T_token_type token_type, T_operator_type operator_type)
+        : Token_(token_type) {
         this->operator_type = operator_type;
-    }
-    T_operator_category getOperatorCategory() {
-        return operator_category;
     }
     T_operator_type getOperatorType() {
         return operator_type;

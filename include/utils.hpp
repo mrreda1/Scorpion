@@ -6,54 +6,51 @@
 #include <vector>
 
 using std::string;
+using std::unordered_map;
 
 enum T_token_type {
-    Variable,
+    InvalidToken,
+    InvalidIdentifier,
+    Identifier,
     Condition,
-    Integer,
-    Character,
-    String,
-    Float,
-    Void,
+    TypeSpeciefier,
     Loop,
     Return,
     Struct,
-    Operator,
+    ArithmeticOper,
+    LogicOper,
+    RelationalOper,
+    AssignmentOper,
+    AccessOper,
     Braces,
     Constant,
     QuotationSingle,
     QuotationDouble,
     Inclusion,
-    Comment
+    Comment,
+    EndStatement,
+    Comma
 };
 
 enum T_operator_type {
-    Sum,
-    Sub,
-    Mul,
-    Div,
-    LAnd,
-    LOr,
-    Not,
-    IsEq,
-    Less,
-    Greater,
-    LE,
-    GE,
-    NotEq,
-    Equal,
-    Access
+    SumOper,
+    SubOper,
+    MulOper,
+    DivOper,
+    LAndOper,
+    LOrOper,
+    NotOper,
+    IsEqOper,
+    LessOper,
+    GreaterOper,
+    LEOper,
+    GEOper,
+    NotEqOper,
+    EqualOper,
+    PointerOper
 };
 
-enum T_operator_category {
-    ArithmeticOper,
-    LogicOper,
-    RelationalOper,
-    AssignmentOper,
-    AccessOper
-};
-
-enum T_data_type { D_Integer, D_Character, D_String, D_Float };
+enum T_data_type { Integer, Character, String, Float, Void };
 enum T_condition_type { If_branch, Else_branch };
 enum T_braces_type { Parenthesis, CurlyBrackets, Brackets };
 enum T_comment_type { Multiple, OneLine };
