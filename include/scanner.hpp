@@ -9,6 +9,6 @@
 #include "quotation.hpp"
 #include "token.hpp"
 #include "variable.hpp"
-#include "utils.h"
+#include "utils.hpp"
 
 #endif
