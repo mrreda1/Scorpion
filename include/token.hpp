@@ -1,6 +1,7 @@
 #ifndef _TOKEN
 #define _TOKEN
 
+#include "keywords.hpp"
 #include "utils.hpp"
 
 class Token_ {

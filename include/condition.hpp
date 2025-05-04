@@ -5,15 +5,15 @@
 
 class T_condition_ : public Token_ {
   private:
-    T_condition_type condition_type;
+    bool is_if_branch;
 
   public:
-    T_condition_(T_condition_type condition_type) {
+    T_condition_(bool is_if_branch) {
         this->token_type = Condition;
-        this->condition_type = condition_type;
+        this->is_if_branch = is_if_branch;
     }
-    T_condition_type getConditionType() {
-        return condition_type;
+    bool isIfBranch() {
+        return is_if_branch;
     }
 };
 

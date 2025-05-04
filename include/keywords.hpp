@@ -3,7 +3,33 @@
 
 #include "utils.hpp"
 
-std::unordered_map<string, T_token_type>
+static unordered_map<T_token_type, string>
+    token_print_table({{Identifier, "Identifier"},
+                       {Condition, "Condition"},
+                       {TypeSpeciefier, "Type Specifier"},
+                       {Void, "Void"},
+                       {Loop, "Loop"},
+                       {Return, "Return"},
+                       {Struct, "Struct"},
+                       {Operator, "Operator"},
+                       {Braces, "Braces"},
+                       {Constant, "Constant"},
+                       {QuotationSingle, "Single Quotation"},
+                       {QuotationDouble, "Double Quotation"},
+                       {Inclusion, "Inclusion"},
+                       {CommentBegin, "Comment Start"},
+                       {CommentEnd, "Comment End"},
+                       {EndStatement, "Semi Column"},
+                       {Comma, "Comma"}
+
+    });
+static unordered_map<T_operator_category, string>
+    operator_print_table({{ArithmeticOper, "Arithmetic Operator"},
+                          {LogicOper, "Logical Operator"},
+                          {RelationalOper, "Relational Operator"},
+                          {AssignmentOper, "Assignment Operator"},
+                          {AccessOper, "Access Operator"}});
+static unordered_map<string, T_token_type>
     keyword_table({{"IfTrue", Condition},
                    {"Otherwise", Condition},
                    {"Imw", TypeSpeciefier},
@@ -12,38 +38,56 @@ std::unordered_map<string, T_token_type>
                    {"Series", TypeSpeciefier},
                    {"IMwf", TypeSpeciefier},
                    {"SIMwf", TypeSpeciefier},
-                   {"NOReturn", TypeSpeciefier},
+                   {"NOReturn", Void},
                    {"RepeatWhen", Loop},
                    {"Reiterate", Loop},
                    {"Turnback", Return},
                    {"Loli", Struct},
-                   {"+", ArithmeticOper},
-                   {"-", ArithmeticOper},
-                   {"*", ArithmeticOper},
-                   {"/", ArithmeticOper},
-                   {"&&", LogicOper},
-                   {"||", LogicOper},
-                   {"~", LogicOper},
-                   {"==", RelationalOper},
-                   {"<", RelationalOper},
-                   {">", RelationalOper},
-                   {"!=", RelationalOper},
-                   {"<=", RelationalOper},
-                   {">=", RelationalOper},
-                   {"=", AssignmentOper},
-                   {"->", AccessOper},
+                   {"Include", Inclusion},
+                   {"+", Operator},
+                   {"-", Operator},
+                   {"*", Operator},
+                   {"/", Operator},
+                   {"&&", Operator},
+                   {"||", Operator},
+                   {"~", Operator},
+                   {"==", Operator},
+                   {"<", Operator},
+                   {">", Operator},
+                   {"!=", Operator},
+                   {"<=", Operator},
+                   {">=", Operator},
+                   {"=", Operator},
+                   {"->", Operator},
                    {"{", Braces},
                    {"}", Braces},
                    {"[", Braces},
                    {"]", Braces},
                    {"(", Braces},
                    {")", Braces},
-                   {"Include", Inclusion},
-                   {"/^", Comment},
-                   {"/@", Comment},
-                   {"@/", InvalidToken}});
+                   {";", EndStatement},
+                   {",", Comma},
+                   {"/@", CommentBegin},
+                   {"@/", CommentEnd}});
 
-std::unordered_map<string, T_operator_type>
+static unordered_map<T_operator_type, T_operator_category>
+    operator_category_table({{SumOper, ArithmeticOper},
+                             {SubOper, ArithmeticOper},
+                             {MulOper, ArithmeticOper},
+                             {DivOper, ArithmeticOper},
+                             {LAndOper, LogicOper},
+                             {LOrOper, LogicOper},
+                             {NotOper, LogicOper},
+                             {IsEqOper, RelationalOper},
+                             {LessOper, RelationalOper},
+                             {GreaterOper, RelationalOper},
+                             {NotEqOper, RelationalOper},
+                             {LEOper, RelationalOper},
+                             {GEOper, RelationalOper},
+                             {EqualOper, AssignmentOper},
+                             {PointerOper, AccessOper}});
+
+static unordered_map<string, T_operator_type>
     operator_type_table({{"+", SumOper},
                          {"-", SubOper},
                          {"*", MulOper},
@@ -60,7 +104,7 @@ std::unordered_map<string, T_operator_type>
                          {"=", EqualOper},
                          {"->", PointerOper}});
 
-std::unordered_map<string, T_braces_type>
+static unordered_map<string, T_braces_type>
     braces_type_table({{"{", CurlyBrackets},
                        {"[", Brackets},
                        {"(", Parenthesis},
@@ -68,19 +112,17 @@ std::unordered_map<string, T_braces_type>
                        {"]", Brackets},
                        {")", Parenthesis}});
 
-std::unordered_map<string, T_data_type> type_specifier_table({
-    {"Imw", Integer},
-    {"SIMw", Integer},
-    {"Chj", Character},
-    {"Series", String},
-    {"IMwf", Float},
-    {"SIMwf", Float},
-    {"NOReturn", Void},
-});
+static unordered_map<string, T_data_type>
+    type_specifier_table({{"Imw", Integer},
+                          {"SIMw", Integer},
+                          {"Chj", Character},
+                          {"Series", String},
+                          {"IMwf", Float},
+                          {"SIMwf", Float}});
 
-string ifBranch = "IfTrue";
-string oneLineComment = "/^";
-string open_braces = "{[(";
-string close_braces = "}])";
+static const string IF_BRANCH = "IfTrue";
+static const string ONE_LINE_COMMENT = "/^";
+static const string OPEN_BRACES = "{[(";
+// const string CLOSE_BRACES = "}])";
 
 #endif
