@@ -153,10 +153,41 @@ scan(std::string path) {
                 } else if (state == 0) {
                     std::string currentstr(1, current);
                     if (keyword_table.find(currentstr) != keyword_table.end()) {
-                        Token new_token = makeNewToken(currentstr, errors);
-                        tokens.push_back(new_token);
-                        scanner_log.push_back(
-                            tokenLog(new_token, line, currentstr));
+                        if (current == '"' || current == '\'') {
+                            char quotation = current;
+                            Token new_token =
+                                new Token_(keyword_table[currentstr]);
+                            tokens.push_back(new_token);
+                            scanner_log.push_back(
+                                tokenLog(new_token, line, currentstr));
+                            int begin_line = line;
+                            while (source.get(current)) {
+                                line += (current == '\n');
+                                if (current == quotation) {
+                                    break;
+                                }
+                                prefix.push_back(current);
+                            }
+                            new_token = new T_content_string_(
+                                prefix,
+                                quotation == '"' ? QDContent : QSContent);
+                            tokens.push_back(new_token);
+                            scanner_log.push_back(
+                                tokenLog(new_token, begin_line, prefix));
+                            if (source.eof()) {
+                                return {tokens, scanner_log, errors, line - 1};
+                            }
+                            new_token = new Token_(keyword_table[currentstr]);
+                            tokens.push_back(new_token);
+                            scanner_log.push_back(
+                                tokenLog(new_token, line, currentstr));
+                            prefix = "";
+                        } else {
+                            Token new_token = makeNewToken(currentstr, errors);
+                            tokens.push_back(new_token);
+                            scanner_log.push_back(
+                                tokenLog(new_token, line, currentstr));
+                        }
                     } else if (spaces.find(current) == std::string::npos) {
                         prefix.push_back(current);
                     }
