@@ -4,6 +4,7 @@
 #include "braces.hpp"
 #include "condition.hpp"
 #include "constant.hpp"
+#include "contentstring.hpp"
 #include "identifier.hpp"
 #include "keywords.hpp"
 #include "operator.hpp"
@@ -14,6 +15,6 @@
 
 int to_int(string);
 std::tuple<std::vector<Token>, std::vector<std::array<string, 2>>, int, int>
-scan(std::string);
+    scan(std::string);
 
 #endif
