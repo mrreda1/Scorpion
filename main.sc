@@ -3,5 +3,6 @@ NOReturn decrease() {
   RepeatWhen (counter <= num) {
     reg3 = reg3 - 1;
     reg4= (x+y) * z;
+    x = strct->value;
   }
 }
