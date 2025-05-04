@@ -38,6 +38,7 @@ static unordered_map<T_operator_category, string>
                           {RelationalOper, "Relational Operator"},
                           {AssignmentOper, "Assignment Operator"},
                           {AccessOper, "Access Operator"}});
+
 static unordered_map<string, T_token_type>
     keyword_table({{"IfTrue", Condition},
                    {"Otherwise", Condition},

@@ -34,7 +34,7 @@ int getNewState(char c) {
 }
 
 std::array<string, 2> tokenLog(Token token, int line, string text) {
-    string token_log_text = "Line: " + to_string(line) + string(1, '\t');
+    string token_log_text = "Line: " + to_string(line) + string(2, ' ');
     string token_log_type;
     switch (token->getTokenType()) {
         case Identifier: {
@@ -66,6 +66,7 @@ std::array<string, 2> tokenLog(Token token, int line, string text) {
     }
     return {token_log_text, token_log_type};
 }
+
 Token makeNewToken(std::string identifier, int &errors) {
     if (int num = to_int(identifier) != -1) {
         return new T_constant_(num);
@@ -227,7 +228,38 @@ scan(std::string path) {
                 break;
             case 5: {
                 if (current == '@') {
+                    Token new_token = new Token_(CommentBegin);
+                    tokens.push_back(new_token);
+                    scanner_log.push_back(tokenLog(new_token, line, "/@"));
                     state = 0;
+                    int begin_line = line;
+                    while (source.get(current)) {
+                        line += (current == '\n');
+                        if (state == 1 && current == '/') {
+                            prefix.pop_back();
+                            break;
+                        }
+                        state = 0;
+                        if (current == '@') {
+                            state = 1;
+                        }
+                        prefix.push_back(current);
+                    }
+                    if (!prefix.empty()) {
+                        Token new_token =
+                            new T_content_string_(prefix, CMContent);
+                        tokens.push_back(new_token);
+                        scanner_log.push_back(
+                            tokenLog(new_token, begin_line, prefix));
+                    }
+                    if (source.eof()) {
+                        return {tokens, scanner_log, errors, line - 1};
+                    }
+                    new_token = new Token_(CommentEnd);
+                    tokens.push_back(new_token);
+                    scanner_log.push_back(tokenLog(new_token, line, "@/"));
+                    state = 0;
+                    prefix = "";
                 } else if (current == '^') {
                     Token new_token = new Token_(CommentOneLine);
                     tokens.push_back(new_token);
