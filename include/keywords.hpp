@@ -19,10 +19,19 @@ static unordered_map<T_token_type, string>
                        {Inclusion, "Inclusion"},
                        {CommentBegin, "Comment Start"},
                        {CommentEnd, "Comment End"},
+                       {CommentOneLine, "Comment"},
                        {EndStatement, "Semi Column"},
                        {Comma, "Comma"}
 
     });
+
+static unordered_map<T_content_string_type, string> content_string_print_table{
+    {COLContent, "One-line Comment Content"},
+    {CMContent, "Multi-line Comment Content"},
+    {QDContent, "Double Quotation Content"},
+    {QSContent, "Single Quotation Content"},
+};
+
 static unordered_map<T_operator_category, string>
     operator_print_table({{ArithmeticOper, "Arithmetic Operator"},
                           {LogicOper, "Logical Operator"},
@@ -67,6 +76,8 @@ static unordered_map<string, T_token_type>
                    {")", Braces},
                    {";", EndStatement},
                    {",", Comma},
+                   {"\"", QuotationDouble},
+                   {"'", QuotationSingle},
                    {"/@", CommentBegin},
                    {"@/", CommentEnd}});
 

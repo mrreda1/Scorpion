@@ -1,7 +1,10 @@
+Include("file.sc");
+
 NOReturn decrease() {
   Imw 3num = 5;
-  RepeatWhen (counter <= num) {
+  RepeatWhen (counter <= num) { /^ Hello World!
     reg3 = reg3 - 1;
     reg4= (x+y) * z;
+    x = strct->value;
   }
 }

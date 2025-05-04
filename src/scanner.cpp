@@ -52,6 +52,13 @@ std::array<string, 2> tokenLog(Token token, int line, string text) {
             token_log_type = string("Token Type: ") +
                              operator_print_table[oper->getOperatorCategory()];
         } break;
+        case ContentString: {
+            T_content_string content = dynamic_cast<T_content_string>(token);
+            token_log_text += string("Token Text: ") + text;
+            token_log_type =
+                string("Token Type: ") +
+                content_string_print_table[content->getContentType()];
+        } break;
         default:
             token_log_text += string("Token Text: ") + text;
             token_log_type = string("Token Type: ") +
@@ -98,7 +105,7 @@ scan(std::string path) {
     int state = 0;
 
     std::string prefix = "";
-    std::string terminate = "><*+,;-={}()[]/~ \n\t";
+    std::string terminate = "><*+,;-={}()[]/~\"' \n\t";
     std::string spaces = " \n\t";
 
     while (source.get(current)) {
@@ -222,6 +229,20 @@ scan(std::string path) {
                 if (current == '@') {
                     state = 0;
                 } else if (current == '^') {
+                    Token new_token = new Token_(CommentOneLine);
+                    tokens.push_back(new_token);
+                    scanner_log.push_back(tokenLog(new_token, line, "/^"));
+                    while (source.get(current) && current != '\n') {
+                        prefix.push_back(current);
+                    }
+                    if (!prefix.empty()) {
+                        Token new_token =
+                            new T_content_string_(prefix, COLContent);
+                        tokens.push_back(new_token);
+                        scanner_log.push_back(
+                            tokenLog(new_token, line, prefix));
+                    }
+                    prefix = "";
                     state = 0;
                 } else {
                     Token new_token = new T_operator_(DivOper);
