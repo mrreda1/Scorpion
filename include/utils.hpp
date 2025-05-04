@@ -1,16 +1,14 @@
 #ifndef _UTILS
 #define _UTILS
 
+#include <array>
 #include <iostream>
 #include <regex>
 #include <unordered_map>
 #include <vector>
-#include <array>
 
 using std::string;
 using std::unordered_map;
-
-// void buildTokenPrintTable();
 
 enum T_token_type {
     Identifier,
@@ -25,12 +23,16 @@ enum T_token_type {
     Constant,
     QuotationSingle,
     QuotationDouble,
+    ContentString,
     Inclusion,
+    CommentOneLine,
     CommentBegin,
     CommentEnd,
     EndStatement,
     Comma
 };
+
+enum T_content_string_type { QDContent, QSContent, CMContent, COLContent };
 
 enum T_operator_category {
     ArithmeticOper,
