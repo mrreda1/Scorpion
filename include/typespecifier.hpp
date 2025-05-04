@@ -9,6 +9,7 @@ class T_type_specifier_ : public Token_ {
 
   public:
     T_type_specifier_(T_data_type data_type) {
+        this->token_type = TypeSpeciefier;
         this->data_type = data_type;
     }
     T_data_type getDataType() {

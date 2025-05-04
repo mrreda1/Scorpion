@@ -6,19 +6,19 @@
 class T_braces_ : public Token_ {
   private:
     T_braces_type braces_type;
-    T_braces_dir braces_dir;
+    bool is_open_braces;
 
   public:
-    T_braces_(T_braces_type braces_type, T_braces_dir braces_dir) {
+    T_braces_(T_braces_type braces_type, bool is_open_braces) {
         this->token_type = Braces;
         this->braces_type = braces_type;
-        this->braces_dir = braces_dir;
+        this->is_open_braces = is_open_braces;
     }
     T_braces_type getBracesType() {
         return braces_type;
     }
-    T_braces_dir getBracesDirection() {
-        return braces_dir;
+    bool isOpenBraces() {
+        return is_open_braces;
     }
 };
 
