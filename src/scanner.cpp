@@ -33,7 +33,8 @@ int getNewState(char c) {
     }
 }
 
-std::array<string, 2> tokenLog(Token token, int line, string text) {
+std::array<string, 2> tokenLog(Token token, string text) {
+    int line = token->getLine();
     string token_log_text = "Line: " + to_string(line) + string(2, ' ');
     string token_log_type;
     switch (token->getTokenType()) {
@@ -67,27 +68,27 @@ std::array<string, 2> tokenLog(Token token, int line, string text) {
     return {token_log_text, token_log_type};
 }
 
-Token makeNewToken(std::string identifier, int &errors) {
+Token makeNewToken(std::string identifier, int &errors, int line) {
     if (int num = to_int(identifier) != -1) {
-        return new T_constant_(num);
+        return new T_constant_(num, line);
     } else if (keyword_table.find(identifier) != keyword_table.end()) {
         T_token_type token_type = keyword_table[identifier];
         switch (token_type) {
             case TypeSpeciefier:
-                return new T_type_specifier_(type_specifier_table[identifier]);
+                return new T_type_specifier_(type_specifier_table[identifier], line);
             case Condition:
-                return new T_condition_(identifier == IF_BRANCH);
+                return new T_condition_(identifier == IF_BRANCH, line);
             case Operator:
-                return new T_operator_(operator_type_table[identifier]);
+                return new T_operator_(operator_type_table[identifier], line);
             case Braces:
                 return new T_braces_(braces_type_table[identifier],
                                      OPEN_BRACES.find(identifier) !=
-                                         std::string::npos);
+                                         std::string::npos, line);
             default:
-                return new Token_(token_type);
+                return new Token_(token_type, line);
         }
     } else if (!identifier.empty()) {
-        T_identifier new_token = new T_identifier_(identifier);
+        T_identifier new_token = new T_identifier_(identifier, line);
         errors += !new_token->isValid();
         return new_token;
     }
@@ -113,9 +114,9 @@ scan(std::string path) {
         if (state == 0 && !prefix.empty() &&
             terminate.find(current) != std::string::npos) {
             if (prefix != "") {
-                Token new_token = makeNewToken(prefix, errors);
+                Token new_token = makeNewToken(prefix, errors, line);
                 tokens.push_back(new_token);
-                scanner_log.push_back(tokenLog(new_token, line, prefix));
+                scanner_log.push_back(tokenLog(new_token, prefix));
                 prefix = "";
             }
         }
@@ -126,27 +127,27 @@ scan(std::string path) {
                     if (current == '|' && prefix.back() == '|') {
                         prefix.pop_back();
                         if (prefix != "") {
-                            Token new_token = makeNewToken(prefix, errors);
+                            Token new_token = makeNewToken(prefix, errors, line);
                             tokens.push_back(new_token);
                             scanner_log.push_back(
-                                tokenLog(new_token, line, prefix));
+                                tokenLog(new_token, prefix));
                             prefix = "";
                         }
-                        Token new_token = new T_operator_(LOrOper);
+                        Token new_token = new T_operator_(LOrOper, line);
                         tokens.push_back(new_token);
-                        scanner_log.push_back(tokenLog(new_token, line, "||"));
+                        scanner_log.push_back(tokenLog(new_token, "||"));
                     } else if (current == '&' && prefix.back() == '&') {
                         prefix.pop_back();
                         if (prefix != "") {
-                            Token new_token = makeNewToken(prefix, errors);
+                            Token new_token = makeNewToken(prefix, errors, line);
                             tokens.push_back(new_token);
                             scanner_log.push_back(
-                                tokenLog(new_token, line, prefix));
+                                tokenLog(new_token, prefix));
                             prefix = "";
                         }
-                        Token new_token = new T_operator_(LAndOper);
+                        Token new_token = new T_operator_(LAndOper, line);
                         tokens.push_back(new_token);
-                        scanner_log.push_back(tokenLog(new_token, line, "&&"));
+                        scanner_log.push_back(tokenLog(new_token, "&&"));
                     } else if (spaces.find(current) == std::string::npos) {
                         prefix.push_back(current);
                     }
@@ -156,10 +157,10 @@ scan(std::string path) {
                         if (current == '"' || current == '\'') {
                             char quotation = current;
                             Token new_token =
-                                new Token_(keyword_table[currentstr]);
+                                new Token_(keyword_table[currentstr], line);
                             tokens.push_back(new_token);
                             scanner_log.push_back(
-                                tokenLog(new_token, line, currentstr));
+                                tokenLog(new_token, currentstr));
                             int begin_line = line;
                             while (source.get(current)) {
                                 line += (current == '\n');
@@ -170,23 +171,23 @@ scan(std::string path) {
                             }
                             new_token = new T_content_string_(
                                 prefix,
-                                quotation == '"' ? QDContent : QSContent);
+                                quotation == '"' ? QDContent : QSContent, begin_line);
                             tokens.push_back(new_token);
                             scanner_log.push_back(
-                                tokenLog(new_token, begin_line, prefix));
+                                tokenLog(new_token, prefix));
                             if (source.eof()) {
                                 return {tokens, scanner_log, errors, line - 1};
                             }
-                            new_token = new Token_(keyword_table[currentstr]);
+                            new_token = new Token_(keyword_table[currentstr], line);
                             tokens.push_back(new_token);
                             scanner_log.push_back(
-                                tokenLog(new_token, line, currentstr));
+                                tokenLog(new_token, currentstr));
                             prefix = "";
                         } else {
-                            Token new_token = makeNewToken(currentstr, errors);
+                            Token new_token = makeNewToken(currentstr, errors, line);
                             tokens.push_back(new_token);
                             scanner_log.push_back(
-                                tokenLog(new_token, line, currentstr));
+                                tokenLog(new_token, currentstr));
                         }
                     } else if (spaces.find(current) == std::string::npos) {
                         prefix.push_back(current);
@@ -195,14 +196,14 @@ scan(std::string path) {
                 break;
             case 1:
                 if (current == '=') {
-                    Token new_token = new T_operator_(LEOper);
+                    Token new_token = new T_operator_(LEOper, line);
                     tokens.push_back(new_token);
-                    scanner_log.push_back(tokenLog(new_token, line, "<="));
+                    scanner_log.push_back(tokenLog(new_token, "<="));
                     state = 0;
                 } else {
-                    Token new_token = new T_operator_(LessOper);
+                    Token new_token = new T_operator_(LessOper, line);
                     tokens.push_back(new_token);
-                    scanner_log.push_back(tokenLog(new_token, line, "<"));
+                    scanner_log.push_back(tokenLog(new_token, "<"));
                     state = getNewState(current);
                     if (state == 0) {
                         source.seekg(-1, std::ios::cur);
@@ -211,14 +212,14 @@ scan(std::string path) {
                 break;
             case 2:
                 if (current == '=') {
-                    Token new_token = new T_operator_(GEOper);
+                    Token new_token = new T_operator_(GEOper, line);
                     tokens.push_back(new_token);
-                    scanner_log.push_back(tokenLog(new_token, line, ">="));
+                    scanner_log.push_back(tokenLog(new_token, ">="));
                     state = 0;
                 } else {
-                    Token new_token = new T_operator_(GreaterOper);
+                    Token new_token = new T_operator_(GreaterOper, line);
                     tokens.push_back(new_token);
-                    scanner_log.push_back(tokenLog(new_token, line, ">"));
+                    scanner_log.push_back(tokenLog(new_token, ">"));
                     state = getNewState(current);
                     if (state == 0) {
                         source.seekg(-1, std::ios::cur);
@@ -227,14 +228,14 @@ scan(std::string path) {
                 break;
             case 3:
                 if (current == '>') {
-                    Token new_token = new T_operator_(PointerOper);
+                    Token new_token = new T_operator_(PointerOper, line);
                     tokens.push_back(new_token);
-                    scanner_log.push_back(tokenLog(new_token, line, "->"));
+                    scanner_log.push_back(tokenLog(new_token, "->"));
                     state = 0;
                 } else {
-                    Token new_token = new T_operator_(SubOper);
+                    Token new_token = new T_operator_(SubOper, line);
                     tokens.push_back(new_token);
-                    scanner_log.push_back(tokenLog(new_token, line, "-"));
+                    scanner_log.push_back(tokenLog(new_token, "-"));
                     state = getNewState(current);
                     if (state == 0) {
                         source.seekg(-1, std::ios::cur);
@@ -243,14 +244,14 @@ scan(std::string path) {
                 break;
             case 4:
                 if (current == '=') {
-                    Token new_token = new T_operator_(IsEqOper);
+                    Token new_token = new T_operator_(IsEqOper, line);
                     tokens.push_back(new_token);
-                    scanner_log.push_back(tokenLog(new_token, line, "=="));
+                    scanner_log.push_back(tokenLog(new_token, "=="));
                     state = 0;
                 } else {
-                    Token new_token = new T_operator_(EqualOper);
+                    Token new_token = new T_operator_(EqualOper, line);
                     tokens.push_back(new_token);
-                    scanner_log.push_back(tokenLog(new_token, line, "="));
+                    scanner_log.push_back(tokenLog(new_token, "="));
                     state = getNewState(current);
                     if (state == 0) {
                         source.seekg(-1, std::ios::cur);
@@ -259,9 +260,9 @@ scan(std::string path) {
                 break;
             case 5: {
                 if (current == '@') {
-                    Token new_token = new Token_(CommentBegin);
+                    Token new_token = new Token_(CommentBegin, line);
                     tokens.push_back(new_token);
-                    scanner_log.push_back(tokenLog(new_token, line, "/@"));
+                    scanner_log.push_back(tokenLog(new_token, "/@"));
                     state = 0;
                     int begin_line = line;
                     while (source.get(current)) {
@@ -278,39 +279,39 @@ scan(std::string path) {
                     }
                     if (!prefix.empty()) {
                         Token new_token =
-                            new T_content_string_(prefix, CMContent);
+                            new T_content_string_(prefix, CMContent, begin_line);
                         tokens.push_back(new_token);
                         scanner_log.push_back(
-                            tokenLog(new_token, begin_line, prefix));
+                            tokenLog(new_token, prefix));
                     }
                     if (source.eof()) {
                         return {tokens, scanner_log, errors, line - 1};
                     }
-                    new_token = new Token_(CommentEnd);
+                    new_token = new Token_(CommentEnd, line);
                     tokens.push_back(new_token);
-                    scanner_log.push_back(tokenLog(new_token, line, "@/"));
+                    scanner_log.push_back(tokenLog(new_token, "@/"));
                     state = 0;
                     prefix = "";
                 } else if (current == '^') {
-                    Token new_token = new Token_(CommentOneLine);
+                    Token new_token = new Token_(CommentOneLine, line);
                     tokens.push_back(new_token);
-                    scanner_log.push_back(tokenLog(new_token, line, "/^"));
+                    scanner_log.push_back(tokenLog(new_token, "/^"));
                     while (source.get(current) && current != '\n') {
                         prefix.push_back(current);
                     }
                     if (!prefix.empty()) {
                         Token new_token =
-                            new T_content_string_(prefix, COLContent);
+                            new T_content_string_(prefix, COLContent, line);
                         tokens.push_back(new_token);
                         scanner_log.push_back(
-                            tokenLog(new_token, line, prefix));
+                            tokenLog(new_token, prefix));
                     }
                     prefix = "";
                     state = 0;
                 } else {
-                    Token new_token = new T_operator_(DivOper);
+                    Token new_token = new T_operator_(DivOper, line);
                     tokens.push_back(new_token);
-                    scanner_log.push_back(tokenLog(new_token, line, "/"));
+                    scanner_log.push_back(tokenLog(new_token, "/"));
                     state = getNewState(current);
                     if (state == 0) {
                         source.seekg(-1, std::ios::cur);

@@ -10,7 +10,8 @@ class T_content_string_ : public Token_ {
 
   public:
     T_content_string_(string content_string,
-                      T_content_string_type content_type) {
+                      T_content_string_type content_type, int line) {
+        this->line = line;
         this->token_type = ContentString;
         this->content_string = content_string;
         this->content_type = content_type;

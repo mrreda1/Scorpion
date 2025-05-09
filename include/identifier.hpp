@@ -10,7 +10,8 @@ class T_identifier_ : public Token_ {
     bool is_valid;
 
   public:
-    T_identifier_(string identifier) {
+    T_identifier_(string identifier, int line) {
+        this->line = line;
         this->token_type = Identifier;
         this->identifier = identifier;
         this->is_valid = isValidIdentifier(identifier);

@@ -9,8 +9,9 @@ class T_braces_ : public Token_ {
     bool is_open_braces;
 
   public:
-    T_braces_(T_braces_type braces_type, bool is_open_braces) {
+    T_braces_(T_braces_type braces_type, bool is_open_braces, int line) {
         this->token_type = Braces;
+        this->line = line;
         this->braces_type = braces_type;
         this->is_open_braces = is_open_braces;
     }

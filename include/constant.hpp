@@ -8,7 +8,8 @@ class T_constant_ : public Token_ {
     int value;
 
   public:
-    T_constant_(int value) {
+    T_constant_(int value, int line) {
+        this->line = line;
         this->token_type = Constant;
         this->value = value;
     }

@@ -8,7 +8,8 @@ class T_type_specifier_ : public Token_ {
     T_data_type data_type;
 
   public:
-    T_type_specifier_(T_data_type data_type) {
+    T_type_specifier_(T_data_type data_type, int line) {
+        this->line = line;
         this->token_type = TypeSpeciefier;
         this->data_type = data_type;
     }

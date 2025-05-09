@@ -8,7 +8,8 @@ class T_condition_ : public Token_ {
     bool is_if_branch;
 
   public:
-    T_condition_(bool is_if_branch) {
+    T_condition_(bool is_if_branch, int line) {
+        this->line = line;
         this->token_type = Condition;
         this->is_if_branch = is_if_branch;
     }
