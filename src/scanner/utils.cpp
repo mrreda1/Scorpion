@@ -1,4 +1,4 @@
-#include "../include/scanner.hpp"
+#include "../../include/scanner.hpp"
 
 using std::array;
 using std::string;

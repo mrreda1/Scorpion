@@ -1,9 +1,7 @@
-#include "../include/scanner.hpp"
-#include <array>
+#include "../../include/scanner.hpp"
 #include <fstream>
 
 using std::string;
-using std::to_string;
 using std::vector;
 
 int getNewState(char c) {
@@ -221,11 +219,9 @@ std::tuple<vector<Token>, int, int> scan(string path) {
                         }
                         prefix.push_back(current);
                     }
-                    if (!prefix.empty()) {
-                        Token new_token = new T_content_string_(
-                            prefix, CMContent, begin_line);
-                        tokens.push_back(new_token);
-                    }
+                    new_token =
+                        new T_content_string_(prefix, CMContent, begin_line);
+                    tokens.push_back(new_token);
                     if (source.eof()) {
                         return {tokens, errors, line - 1};
                     }
@@ -239,11 +235,8 @@ std::tuple<vector<Token>, int, int> scan(string path) {
                     while (source.get(current) && current != '\n') {
                         prefix.push_back(current);
                     }
-                    if (!prefix.empty()) {
-                        Token new_token =
-                            new T_content_string_(prefix, COLContent, line);
-                        tokens.push_back(new_token);
-                    }
+                    new_token = new T_content_string_(prefix, COLContent, line);
+                    tokens.push_back(new_token);
                     prefix = "";
                     state = 0;
                 } else {

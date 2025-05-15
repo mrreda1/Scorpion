@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <vector>
 
+using std::vector;
 using std::string;
 using std::unordered_map;
 
