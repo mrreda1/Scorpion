@@ -3,7 +3,7 @@
 
 using std::vector;
 
-bool multi_line_comment(vector<Token> &tokens, int itr, int state) {
+bool multi_line_comment(vector<Token> &tokens, size_t itr, int state) {
     if (itr >= tokens.size()) {
         return false;
     }
@@ -17,7 +17,7 @@ bool multi_line_comment(vector<Token> &tokens, int itr, int state) {
     return (token->getTokenType() == CommentEnd);
 }
 
-bool one_line_comment(vector<Token> &tokens, int itr, int state) {
+bool one_line_comment(vector<Token> &tokens, size_t itr, int state) {
     if (itr >= tokens.size()) {
         return false;
     }

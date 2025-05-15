@@ -3,7 +3,7 @@
 
 using std::vector;
 
-bool include_command(vector<Token> &tokens, int itr, int state) {
+bool include_command(vector<Token> &tokens, size_t itr, int state) {
     if (itr >= tokens.size()) {
         return false;
     }
@@ -16,13 +16,13 @@ bool include_command(vector<Token> &tokens, int itr, int state) {
             T_braces braces = dynamic_cast<T_braces>(token);
             if (braces->isOpenBraces() &&
                 braces->getBracesType() == Parenthesis) {
-                return include_rule(tokens, itr, 1);
+                return include_command(tokens, itr, 1);
             }
             return false;
         }
         case 1: {
             if (token->getTokenType() == Identifier) {
-                return include_rule(tokens, itr, 2);
+                return include_command(tokens, itr, 2);
             }
             return false;
         }
@@ -33,7 +33,7 @@ bool include_command(vector<Token> &tokens, int itr, int state) {
             T_braces braces = dynamic_cast<T_braces>(token);
             if (!braces->isOpenBraces() &&
                 braces->getBracesType() == Parenthesis) {
-                return include_rule(tokens, itr, 3);
+                return include_command(tokens, itr, 3);
             }
             return false;
         }

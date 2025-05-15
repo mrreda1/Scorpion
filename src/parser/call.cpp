@@ -3,7 +3,7 @@
 
 using std::vector;
 
-bool call(vector<Token> &tokens, int itr, int state) {
+bool call(vector<Token> &tokens, size_t itr, int state) {
     if (itr >= tokens.size()) {
         return false;
     }
