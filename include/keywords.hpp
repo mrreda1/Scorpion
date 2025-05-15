@@ -25,6 +25,24 @@ static unordered_map<T_token_type, string>
 
     });
 
+static unordered_map<T_token_type, string>
+    keyword_print_table({{Void, "NOReturn"},
+                         {Return, "Turnback"},
+                         {Struct, "Loli"},
+                         {QuotationSingle, "'"},
+                         {QuotationDouble, "\""},
+                         {Inclusion, "Include"},
+                         {CommentBegin, "/@"},
+                         {CommentEnd, "@/"},
+                         {CommentOneLine, "/^"},
+                         {EndStatement, ";"},
+                         {Comma, ","}
+
+    });
+
+static unordered_map<T_loop_type, string>
+    loop_print_table({{RepeatWhen, "RepeatWhen"}, {Reiterate, "Reiterate"}});
+
 static unordered_map<T_content_string_type, string> content_string_print_table{
     {COLContent, "One-line Comment Content"},
     {CMContent, "Multi-line Comment Content"},
@@ -33,11 +51,36 @@ static unordered_map<T_content_string_type, string> content_string_print_table{
 };
 
 static unordered_map<T_operator_category, string>
-    operator_print_table({{ArithmeticOper, "Arithmetic Operator"},
-                          {LogicOper, "Logical Operator"},
-                          {RelationalOper, "Relational Operator"},
-                          {AssignmentOper, "Assignment Operator"},
-                          {AccessOper, "Access Operator"}});
+    operator_type_print_table({{ArithmeticOper, "Arithmetic Operator"},
+                               {LogicOper, "Logical Operator"},
+                               {RelationalOper, "Relational Operator"},
+                               {AssignmentOper, "Assignment Operator"},
+                               {AccessOper, "Access Operator"}});
+
+static unordered_map<T_operator_type, string>
+    operator_print_table({{SumOper, "+"},
+                          {SubOper, "-"},
+                          {MulOper, "*"},
+                          {DivOper, "/"},
+                          {LAndOper, "&&"},
+                          {LOrOper, "||"},
+                          {NotOper, "~"},
+                          {IsEqOper, "=="},
+                          {LessOper, "<"},
+                          {GreaterOper, ">"},
+                          {NotEqOper, "!="},
+                          {LEOper, "<="},
+                          {GEOper, ">="},
+                          {EqualOper, "="},
+                          {PointerOper, "->"}});
+
+static unordered_map<T_data_type, string>
+    type_specifier_print_table({{Integer, "Imw"},
+                                {SInteger, "SIMw"},
+                                {Character, "Chj"},
+                                {String, "Series"},
+                                {Float, "IMwf"},
+                                {SFloat, "SIMwf"}});
 
 static unordered_map<string, T_token_type>
     keyword_table({{"IfTrue", Condition},
@@ -80,7 +123,8 @@ static unordered_map<string, T_token_type>
                    {"\"", QuotationDouble},
                    {"'", QuotationSingle},
                    {"/@", CommentBegin},
-                   {"@/", CommentEnd}});
+                   {"@/", CommentEnd},
+                   {"/^", CommentOneLine}});
 
 static unordered_map<T_operator_type, T_operator_category>
     operator_category_table({{SumOper, ArithmeticOper},
@@ -126,13 +170,17 @@ static unordered_map<string, T_braces_type>
 
 static unordered_map<string, T_data_type>
     type_specifier_table({{"Imw", Integer},
-                          {"SIMw", Integer},
+                          {"SIMw", SInteger},
                           {"Chj", Character},
                           {"Series", String},
                           {"IMwf", Float},
-                          {"SIMwf", Float}});
+                          {"SIMwf", SFloat}});
+
+static unordered_map<string, T_loop_type>
+    loop_table({{"RepeatWhen", RepeatWhen}, {"Reiterate", Reiterate}});
 
 static const string IF_BRANCH = "IfTrue";
+static const string ELSE_BRANCH = "Otherwise";
 static const string ONE_LINE_COMMENT = "/^";
 static const string OPEN_BRACES = "{[(";
 // const string CLOSE_BRACES = "}])";

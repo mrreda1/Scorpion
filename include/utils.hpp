@@ -61,9 +61,10 @@ enum T_operator_type {
 };
 
 // enum T_condition_type { If_branch, Else_branch };
-enum T_data_type { Integer, Character, String, Float };
+enum T_data_type { Integer, Character, String, Float, SInteger, SFloat };
 enum T_braces_type { Parenthesis, CurlyBrackets, Brackets };
 enum T_comment_type { Multiple, OneLine };
+enum T_loop_type { RepeatWhen, Reiterate };
 enum T_braces_dir { Open, Close };
 
 #endif
